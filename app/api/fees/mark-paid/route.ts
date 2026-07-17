@@ -6,7 +6,8 @@ import { withTenant } from "@/lib/withTenant";
 import { sendTemplateMessage } from "@/lib/whatsapp";
 export async function POST(req: Request) {
   const form = await req.formData(),
-    id = String(form.get("id") || "");
+    id = String(form.get("id") || ""),
+    returnTo = String(form.get("returnTo") || "/dashboard");
   if (!mongoose.isValidObjectId(id))
     return new Response("Invalid fee", { status: 400 });
   await db();
@@ -35,5 +36,5 @@ export async function POST(req: Request) {
         },
       );
     }
-  redirect("/dashboard");
+  redirect(/^\/dashboard(?:\?month=\d{1,2}&year=\d{4})?$/.test(returnTo) ? returnTo : "/dashboard");
 }
