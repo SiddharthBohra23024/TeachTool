@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { ChevronRight, ClipboardList, Home, IndianRupee, Megaphone, Plus, Settings, UserPlus, Users, X } from "lucide-react";
 
 export function BottomNav(){
@@ -13,7 +13,12 @@ export function BottomNav(){
 }
 
 export function PageHeader({title,back="/dashboard"}:{title:string;back?:string}){return <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-slate-100 bg-white px-4 py-4"><Link href={back} className="rounded-xl p-2 transition hover:bg-slate-100">←</Link><h1 className="flex-1 truncate text-base font-bold text-slate-800">{title}</h1></header>}
-export function ConfirmForm({action,message,children}:{action:string;message:string;children:React.ReactNode}){return <form action={action} method="post" onSubmit={(e:FormEvent)=>{if(!confirm(message))e.preventDefault()}}>{children}</form>}
+export function ConfirmForm({action,message,children}:{action:string;message:string;children:React.ReactNode}){
+  const[open,setOpen]=useState(false),form=useRef<HTMLFormElement>(null),submitter=useRef<HTMLButtonElement|null>(null),approved=useRef(false);
+  function handleSubmit(e:FormEvent<HTMLFormElement>){if(approved.current)return; e.preventDefault();submitter.current=(e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement|null;setOpen(true)}
+  function proceed(){approved.current=true;setOpen(false);form.current?.requestSubmit(submitter.current||undefined)}
+  return <><form ref={form} action={action} method="post" onSubmit={handleSubmit}>{children}</form>{open&&<div className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-950/50 p-4 backdrop-blur-sm sm:items-center" role="presentation" onMouseDown={()=>setOpen(false)}><section className="w-full max-w-sm rounded-[2rem] border border-white/60 bg-white p-6 shadow-2xl" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" onMouseDown={e=>e.stopPropagation()}><div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-50 text-2xl text-orange-500">?</div><h2 id="confirm-title" className="text-center text-lg font-extrabold text-slate-900">Please confirm</h2><p className="mx-auto mt-2 max-w-xs text-center text-sm leading-6 text-slate-500">{message}</p><div className="mt-6 grid grid-cols-2 gap-3"><button type="button" onClick={()=>setOpen(false)} className="rounded-2xl bg-slate-100 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-200">Cancel</button><button type="button" onClick={proceed} autoFocus className="rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/20 transition hover:from-orange-600 hover:to-amber-600">Confirm</button></div></section></div>}</>;
+}
 
 export function QuickActions(){
   const[open,setOpen]=useState(false);
