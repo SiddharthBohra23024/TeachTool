@@ -1,0 +1,3 @@
+import test from "node:test"; import assert from "node:assert/strict"; import { reminderType } from "../lib/reminders.mjs";
+test("daily reminder is idempotent",()=>{const today=new Date("2026-07-16T08:00:00"),fee={dueDate:"2026-07-18",remindersSent:[]};assert.equal(reminderType(fee,today),"reminder");fee.remindersSent.push({type:"reminder",sentAt:today});assert.equal(reminderType(fee,today),null);});
+test("overdue repeats every four days but once per day",()=>{const today=new Date("2026-07-16T08:00:00"),fee={dueDate:"2026-07-12",remindersSent:[]};assert.equal(reminderType(fee,today),"overdue");fee.remindersSent.push({type:"overdue",sentAt:today});assert.equal(reminderType(fee,today),null);});

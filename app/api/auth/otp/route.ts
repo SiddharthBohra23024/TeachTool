@@ -1,0 +1,2 @@
+import{NextResponse}from"next/server";import{db}from"@/lib/db";import{User}from"@/lib/models";import{issueDevOtp}from"@/lib/auth";
+export async function POST(req:Request){if(process.env.NODE_ENV==="production")return NextResponse.json({error:"OTP provider is not configured"},{status:503});const{phone}=await req.json();if(!/^\d{10}$/.test(phone))return NextResponse.json({error:"Enter a valid phone number"},{status:400});await db();const otp=await issueDevOtp(phone),newUser=!await User.exists({phone});return NextResponse.json({otp,newUser})}
