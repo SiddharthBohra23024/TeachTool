@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { ChevronRight, Home, IndianRupee, Settings, Users } from "lucide-react";
+import { ChevronRight, ClipboardList, Home, IndianRupee, Megaphone, Plus, Settings, UserPlus, Users, X } from "lucide-react";
 
 export function BottomNav(){
   const path=usePathname();
@@ -14,6 +14,15 @@ export function BottomNav(){
 
 export function PageHeader({title,back="/dashboard"}:{title:string;back?:string}){return <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-slate-100 bg-white px-4 py-4"><Link href={back} className="rounded-xl p-2 transition hover:bg-slate-100">←</Link><h1 className="flex-1 truncate text-base font-bold text-slate-800">{title}</h1></header>}
 export function ConfirmForm({action,message,children}:{action:string;message:string;children:React.ReactNode}){return <form action={action} method="post" onSubmit={(e:FormEvent)=>{if(!confirm(message))e.preventDefault()}}>{children}</form>}
+
+export function QuickActions(){
+  const[open,setOpen]=useState(false);
+  const actions=[["/students/add",UserPlus,"Add Student"],["/enrollment-requests",ClipboardList,"Enrollment Requests"],["/settings#broadcast",Megaphone,"Send Broadcast"]] as const;
+  return <div className="fixed bottom-[82px] right-4 z-30 flex flex-col items-end gap-3">
+    {open&&<div className="flex items-center gap-2">{actions.map(([href,Icon,label])=><Link key={href} href={href} className="flex h-16 w-[92px] flex-col items-center justify-center gap-1 rounded-2xl border border-slate-100 bg-white px-2 text-center text-[10px] font-bold leading-tight text-slate-700 shadow-lg transition hover:-translate-y-0.5 hover:text-orange-600"><Icon className="h-5 w-5 text-orange-500"/><span>{label}</span></Link>)}</div>}
+    <button type="button" onClick={()=>setOpen(!open)} aria-label={open?"Close quick actions":"Open quick actions"} className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-orange-500 to-amber-500 text-white shadow-xl shadow-orange-500/30 transition active:scale-95">{open?<X className="h-6 w-6"/>:<Plus className="h-7 w-7"/>}</button>
+  </div>;
+}
 
 export function LoginForm(){
   const[phone,setPhone]=useState(""),[otp,setOtp]=useState(""),[sent,setSent]=useState(false),[newUser,setNewUser]=useState(false),[name,setName]=useState(""),[seconds,setSeconds]=useState(0),[busy,setBusy]=useState(false);

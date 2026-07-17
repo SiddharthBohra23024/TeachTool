@@ -36,7 +36,7 @@ export default async function Settings() {
     </form>
     <h2 className="form-title">Enrollment Link</h2>
     <div className="qr-card"><img src={qr} width="180" height="180" alt="Enrollment QR code"/><small>{link}</small><div className="actions"><a className="btn" href={`https://wa.me/?text=${encodeURIComponent(`Enroll at ${tenant.tuitionName}: ${link}`)}`}>Share Link</a><ConfirmForm action="/api/settings" message="Regenerate the link? The old QR will stop working."><button className="btn secondary" name="action" value="regenerate">Regenerate</button></ConfirmForm></div></div>
-    <h2 className="form-title">Broadcast</h2>
+    <h2 className="form-title" id="broadcast">Broadcast</h2>
     <div className="form-card"><ConfirmForm action="/api/broadcast" message="Send this message now?"><label className="field">Audience<select name="class"><option value="">All students</option>{classes.map(value => <option key={value}>{value}</option>)}</select></label><label className="field">Message<textarea name="message" maxLength={1000} required/></label><button className="btn full">Send Broadcast</button></ConfirmForm></div>
     <Link className="settings-link" href="/enrollment-requests">New Enrollment Requests　›</Link>
     <form action="/api/logout" method="post"><button className="remove">Logout</button></form>
