@@ -1,5 +1,6 @@
 import Link from "next/link";
 import QRCode from "qrcode";
+import { headers } from "next/headers";
 import { ConfirmForm } from "@/app/components";
 import { WhatsAppConnect } from "@/app/whatsapp-connect";
 import { db } from "@/lib/db";
@@ -11,7 +12,10 @@ export default async function Settings() {
   const auth = (await session())!;
   const tenant = await Tenant.findById(auth.tenantId);
   const classes: string[] = await Student.distinct("class", { tenantId: auth.tenantId, status: "active" });
-  const link = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/join/${tenant.enrollmentSlug}`;
+  const requestHeaders = headers();
+  const host = requestHeaders.get("x-forwarded-host") || requestHeaders.get("host");
+  const origin = host ? `${requestHeaders.get("x-forwarded-proto") || "http"}://${host}` : process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const link = `${origin.replace(/\/$/, "")}/join/${tenant.enrollmentSlug}`;
   const qr = await QRCode.toDataURL(link);
   return <>
     <div className="page-head"><h1>Settings</h1></div>
