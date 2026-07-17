@@ -11,6 +11,9 @@ const opts = { timestamps: true };
 export const Tenant = model("Tenant", new Schema({
   tuitionName: { type: String, required: true, trim: true, maxlength: 80 },
   logoUrl: String,
+  ownerName: { type: String, trim: true, maxlength: 80 },
+  ownerAvatar: { type: String, maxlength: 20 },
+  ownerPhotoUrl: { type: String, maxlength: 1500000 },
   ownerPhone: { type: String, required: true, unique: true },
   upiId: String,
   feeDueDay: { type: Number, min: 1, max: 28, default: 5 },

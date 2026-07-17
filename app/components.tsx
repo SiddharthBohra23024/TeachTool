@@ -2,11 +2,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { ChevronRight, ClipboardList, Home, IndianRupee, Megaphone, Plus, Settings, UserPlus, Users, X } from "lucide-react";
+import { ChevronRight, ClipboardList, Home, IndianRupee, Megaphone, Plus, UserCircle, UserPlus, Users, X } from "lucide-react";
 
 export function BottomNav(){
   const path=usePathname();
-  const items=[["/dashboard",Home,"Home"],["/students",Users,"Students"],["/settings",Settings,"Settings"]] as const;
+  const items=[["/dashboard",Home,"Home"],["/students",Users,"Students"],["/profile",UserCircle,"Profile"]] as const;
   return <nav className="fixed bottom-0 left-1/2 z-40 flex h-[72px] w-full max-w-4xl -translate-x-1/2 items-center justify-around border-t border-orange-100 bg-white px-4 pb-1">
     {items.map(([href,Icon,label])=><Link key={href} href={href} className={`flex flex-col items-center gap-1 p-2 ${path.startsWith(href)?"font-bold text-orange-600":"font-medium text-orange-400/80 hover:text-orange-500"}`}><Icon className="h-5 w-5"/><span className="text-[10px]">{label}</span></Link>)}
   </nav>;
@@ -22,7 +22,7 @@ export function ConfirmForm({action,message,children}:{action:string;message:str
 
 export function QuickActions(){
   const[open,setOpen]=useState(false);
-  const actions=[["/students/add",UserPlus,"Add Student"],["/enrollment-requests",ClipboardList,"Enrollment Requests"],["/settings#broadcast",Megaphone,"Send Broadcast"]] as const;
+  const actions=[["/students/add",UserPlus,"Add Student"],["/enrollment-requests",ClipboardList,"Enrollment Requests"],["/payment-system#broadcast",Megaphone,"Send Broadcast"]] as const;
   return <div className="fixed bottom-[82px] right-4 z-30 flex flex-col items-end gap-3">
     {open&&<div className="flex flex-col items-end gap-2">{actions.map(([href,Icon,label])=><Link key={href} href={href} className="group flex items-center gap-3"><span className="rounded-full bg-slate-800 px-4 py-2.5 text-xs font-bold text-white shadow-lg">{label}</span><span className="flex h-12 w-12 items-center justify-center rounded-full border border-slate-100 bg-white text-orange-500 shadow-lg transition group-hover:scale-105"><Icon className="h-5 w-5"/></span></Link>)}</div>}
     <button type="button" onClick={()=>setOpen(!open)} aria-label={open?"Close quick actions":"Open quick actions"} className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-orange-500 to-amber-500 text-white shadow-xl shadow-orange-500/30 transition active:scale-95">{open?<X className="h-6 w-6"/>:<Plus className="h-7 w-7"/>}</button>
